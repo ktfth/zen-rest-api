@@ -150,3 +150,345 @@ npm i --save ts-retrofit
 
 Depois da instalação basta você criar um cliente para o serviço que deseja consumir e o resultado deve ser o seguinte:
 
+```js
+import { GET, BaseService, Response, QueryMap } from 'ts-retrofit'
+
+interface Stock {
+  meta: object;
+  values: object[];
+  status: string;
+}
+
+interface Stocks {
+  [key: string]: Stock;
+}
+
+interface TimeSeriesQuery {
+  symbol: string;
+  interval: string;
+  apikey: string;
+}
+
+export class StocksService extends BaseService {
+  @GET('time_series')
+  async getTimeSeries(@QueryMap query: TimeSeriesQuery): Promise<Response<Stocks>> {
+    return <Response<Stocks>> {}
+  }
+}
+```
+
+A coisa mais importante aqui é ter uma ideia de onde cada peça vai, para que entenda o funcionamento total, que esta presente neste repositório.
+
+Agora nós teremos que criar o serviço de armazenamento de dados e fazer as devidas inclusões:
+
+```bash
+npx feathers generate service
+```
+
+Seguindo o mesmo padrão só que agora utilizando o nome `v1/data/stocks` e com isso você tera como persistir as informações que podem ser verificadas no repositório final para ter um endendimento melhor.
+
+## Como testar?
+
+Após a implentação a ordem não importa muito se você esta condicionando o desenvolvimento da melhor forma possível dentro do seu contexto de atuação, então você devera instalar:
+
+```bash
+npm i --save-dev nock
+```
+
+E o resultado do código devera ser este:
+
+```js
+// For more information about this file see https://dove.feathersjs.com/guides/cli/service.test.html
+import assert from 'assert'
+import { app } from '../../../../src/app'
+import nock from 'nock'
+
+describe('v1/stocks service', () => {
+  it('registered the service', () => {
+    const service = app.service('v1/stocks')
+
+    assert.ok(service, 'Registered the service')
+  })
+
+  it('should retrieve time series', async () => {
+    const service = app.service('v1/stocks')
+
+    const financialData = app.get('financialData')
+
+    const scope = nock(financialData.url)
+      .get(`/time_series?symbol=ETH/BTC&interval=1min&apikey=${financialData.apiKey}`)
+      .reply(200, {
+        "meta": {
+          "symbol": "ETH/BTC",
+          "interval": "1min",
+          "currency_base": "Ethereum",
+          "currency_quote": "Bitcoin",
+          "exchange": "Huobi",
+          "type": "Digital Currency"
+        },
+        "values": [
+          {
+            "datetime": "2023-01-20 17:26:00",
+            "open": "0.07444",
+            "high": "0.07444",
+            "low": "0.07444",
+            "close": "0.07444"
+          },
+          {
+            "datetime": "2023-01-20 17:25:00",
+            "open": "0.07444",
+            "high": "0.07444",
+            "low": "0.07444",
+            "close": "0.07444"
+          },
+          {
+            "datetime": "2023-01-20 17:24:00",
+            "open": "0.07444",
+            "high": "0.07444",
+            "low": "0.07444",
+            "close": "0.07444"
+          },
+          {
+            "datetime": "2023-01-20 17:23:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:22:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:21:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:20:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:19:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:18:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:17:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:16:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:15:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:14:00",
+            "open": "0.07435",
+            "high": "0.07436",
+            "low": "0.07435",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 17:13:00",
+            "open": "0.07435",
+            "high": "0.07435",
+            "low": "0.07435",
+            "close": "0.07435"
+          },
+          {
+            "datetime": "2023-01-20 17:12:00",
+            "open": "0.07435",
+            "high": "0.07435",
+            "low": "0.07435",
+            "close": "0.07435"
+          },
+          {
+            "datetime": "2023-01-20 17:11:00",
+            "open": "0.07426",
+            "high": "0.07435",
+            "low": "0.07426",
+            "close": "0.07435"
+          },
+          {
+            "datetime": "2023-01-20 17:10:00",
+            "open": "0.07426",
+            "high": "0.07426",
+            "low": "0.07426",
+            "close": "0.07426"
+          },
+          {
+            "datetime": "2023-01-20 17:09:00",
+            "open": "0.07426",
+            "high": "0.07426",
+            "low": "0.07426",
+            "close": "0.07426"
+          },
+          {
+            "datetime": "2023-01-20 17:08:00",
+            "open": "0.07438",
+            "high": "0.07438",
+            "low": "0.07427",
+            "close": "0.07427"
+          },
+          {
+            "datetime": "2023-01-20 17:07:00",
+            "open": "0.07438",
+            "high": "0.07438",
+            "low": "0.07438",
+            "close": "0.07438"
+          },
+          {
+            "datetime": "2023-01-20 17:06:00",
+            "open": "0.07438",
+            "high": "0.07438",
+            "low": "0.07438",
+            "close": "0.07438"
+          },
+          {
+            "datetime": "2023-01-20 17:05:00",
+            "open": "0.07438",
+            "high": "0.07438",
+            "low": "0.07438",
+            "close": "0.07438"
+          },
+          {
+            "datetime": "2023-01-20 17:04:00",
+            "open": "0.07439",
+            "high": "0.07439",
+            "low": "0.07439",
+            "close": "0.07439"
+          },
+          {
+            "datetime": "2023-01-20 17:03:00",
+            "open": "0.07439",
+            "high": "0.07439",
+            "low": "0.07439",
+            "close": "0.07439"
+          },
+          {
+            "datetime": "2023-01-20 17:02:00",
+            "open": "0.07440",
+            "high": "0.07440",
+            "low": "0.07440",
+            "close": "0.07440"
+          },
+          {
+            "datetime": "2023-01-20 17:01:00",
+            "open": "0.07443",
+            "high": "0.07443",
+            "low": "0.07440",
+            "close": "0.07440"
+          },
+          {
+            "datetime": "2023-01-20 17:00:00",
+            "open": "0.07436",
+            "high": "0.07443",
+            "low": "0.07436",
+            "close": "0.07443"
+          },
+          {
+            "datetime": "2023-01-20 16:59:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 16:58:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          },
+          {
+            "datetime": "2023-01-20 16:57:00",
+            "open": "0.07436",
+            "high": "0.07436",
+            "low": "0.07436",
+            "close": "0.07436"
+          }
+        ],
+        "status": "ok"
+      })
+
+    const result = await service.find({
+      query: {
+        symbol: 'ETH/BTC',
+      }
+    })
+    
+    assert.ok(result)
+  })
+})
+```
+
+E esta pronto, basta rodar o comando para ver a saida dele como `sucesso` se este for o caso:
+
+![Resultado dos testes](./assets/test-results.png)
+
+Este é um projeto singelo com o objetivo de explorar boas possibilidades para que você desenvolva projetos simples, e com qualidade.
+
+## Publicação (BÔNUS)
+
+Ao final do processo nós deveremos fazer com que nossa aplicação chegue a possa consumir o projeto final, neste passo nós utilizaremos o [fly.io](https://fly.io) uma ferramenta que facilita a homologação do projeto bastante conhecida como `deploy`.
+
+Depois de instalado a ferramenta de publicação do `fly.io` você pode seguir da seguinte maneira:
+
+* Configuração
+
+```yml
+[build]
+  builder = "heroku/buildpacks:20"
+```
+
+* Deploy
+
+```bash
+npm run compile && fly deploy
+```
+
+* Resultado
+
+Você pode acessar a aplicação com através da url devolvida pelo app.
+
+``
+
+## Conclusão
+
+Então para resumirmos tudo o que fizemos, a ideia foi criar uma aplicação simples que recupera os valores de um recursos, depois testamos e publicamos.
+
+Espero que tenha gostado e que possa compartilhar o resultado para chegarmos ao máximo de pessoas possível.
+
+[DEMO](https://cabine-de-controle-api.fly.dev/)
+
+Divirta-se!

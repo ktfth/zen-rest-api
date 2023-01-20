@@ -23,21 +23,19 @@ export class V1StocksService
   async get(id: Id, _params?: V1StocksParams): Promise<V1Stocks> {
     return {
       id: 0,
-      symbol: '',
-      timestamp: -1,
     }
   }
 
-  async create(data: V1StocksData, params?: V1StocksParams): Promise<V1Stocks>
-  async create(data: V1StocksData[], params?: V1StocksParams): Promise<V1Stocks[]>
-  async create(data: V1StocksData | V1StocksData[], params?: V1StocksParams): Promise<V1Stocks | V1Stocks[]> {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map((current) => this.create(current, params)))
-    }
+  async create(data: V1StocksData, params?: V1StocksParams): Promise<V1Stocks> {
+    const service = this.options.app.service('v1/data/stocks')
+    const request = await service.create({
+      stocks: data.stocks,
+    })
+    const stocks = request
 
     return {
-      id: 0,
-      ...data
+      id: stocks.id,
+      ...data,
     }
   }
 
@@ -52,8 +50,6 @@ export class V1StocksService
   async patch(id: NullableId, data: V1StocksPatch, _params?: V1StocksParams): Promise<V1Stocks> {
     return {
       id: 0,
-      symbol: '',
-      timestamp: -1,
       ...data
     }
   }
@@ -61,8 +57,6 @@ export class V1StocksService
   async remove(id: NullableId, _params?: V1StocksParams): Promise<V1Stocks> {
     return {
       id: 0,
-      symbol: '',
-      timestamp: -1,
     }
   }
 }

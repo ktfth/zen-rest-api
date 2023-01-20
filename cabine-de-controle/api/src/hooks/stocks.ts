@@ -1,17 +1,19 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/hook.html
 import type { HookContext } from '../declarations'
-import { StocksService } from '../client/time-series'
+import { StocksService } from '../client/financial-data'
 import { ServiceBuilder } from 'ts-retrofit'
 
 export const stocks = async (context: HookContext) => {
+  const financialData = context.app.get('financialData')
+  
   const stocksService = new ServiceBuilder()
-    .setEndpoint('https://api.twelvedata.com/')
+    .setEndpoint(financialData.url)
     .build(StocksService)
 
   const response = await stocksService.getTimeSeries({
-    symbol: context.data.symbol,
+    symbol: context.params.query.symbol,
     interval: '1min',
-    apikey: '1612b3cffc064f9f991dd7eb49980847'
+    apikey: financialData.apiKey,
   })
 
   context.data.stocks = response.data

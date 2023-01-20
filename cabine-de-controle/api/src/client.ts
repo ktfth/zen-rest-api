@@ -3,6 +3,19 @@ import { feathers } from '@feathersjs/feathers'
 import type { TransportConnection, Params } from '@feathersjs/feathers'
 import authenticationClient from '@feathersjs/authentication-client'
 import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
+import type {
+  V1DataStocks,
+  V1DataStocksData,
+  V1DataStocksQuery,
+  V1DataStocksService
+} from './services/v1/data/stocks/stocks'
+export type { V1DataStocks, V1DataStocksData, V1DataStocksQuery }
+export const v1DataStocksServiceMethods = ['find', 'get', 'create', 'patch', 'remove'] as const
+export type V1DataStocksClientService = Pick<
+  V1DataStocksService<Params<V1DataStocksQuery>>,
+  (typeof v1DataStocksServiceMethods)[number]
+>
+
 import type { V1Stocks, V1StocksData, V1StocksQuery, V1StocksService } from './services/v1/stocks/stocks'
 export type { V1Stocks, V1StocksData, V1StocksQuery }
 export const v1StocksServiceMethods = ['find', 'get', 'create', 'patch', 'remove'] as const
@@ -14,6 +27,7 @@ export const userServiceMethods = ['find', 'get', 'create', 'patch', 'remove'] a
 export type UserClientService = Pick<UserService<Params<UserQuery>>, (typeof userServiceMethods)[number]>
 
 export interface ServiceTypes {
+  'v1/data/stocks': V1DataStocksClientService
   'v1/stocks': V1StocksClientService
   users: UserClientService
   //
@@ -41,6 +55,9 @@ export const createClient = <Configuration = any>(
   })
   client.use('v1/stocks', connection.service('v1/stocks'), {
     methods: v1StocksServiceMethods
+  })
+  client.use('v1/data/stocks', connection.service('v1/data/stocks'), {
+    methods: v1DataStocksServiceMethods
   })
   return client
 }

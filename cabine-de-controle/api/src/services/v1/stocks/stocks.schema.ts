@@ -28,8 +28,8 @@ export const v1StocksSchema = Type.Object(
       })),
       status: Type.String(),
     })),
-    symbol: Type.String(),
-    timestamp: Type.Number()
+    symbol: Type.Optional(Type.String()),
+    timestamp: Type.Optional(Type.Number())
   },
   { $id: 'V1Stocks', additionalProperties: false }
 )
@@ -39,7 +39,7 @@ export const v1StocksResolver = resolve<V1Stocks, HookContext>({})
 export const v1StocksExternalResolver = resolve<V1Stocks, HookContext>({})
 
 // Schema for creating new entries
-export const v1StocksDataSchema = Type.Pick(v1StocksSchema, ['symbol', 'stocks', 'timestamp'], {
+export const v1StocksDataSchema = Type.Pick(v1StocksSchema, ['stocks', 'timestamp'], {
   $id: 'V1StocksData'
 })
 export type V1StocksData = Static<typeof v1StocksDataSchema>

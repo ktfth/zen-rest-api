@@ -34,5 +34,9 @@
       "usernameField": "email",
       "passwordField": "password"
     }
+  },
+  "financialData": {
+    "url": "https://api.twelvedata.com/",
+    "apiKey": "1612b3cffc064f9f991dd7eb49980847"
   }
 }

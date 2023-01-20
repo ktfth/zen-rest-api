@@ -8,7 +8,11 @@ export const configurationSchema = Type.Intersect([
   Type.Object({
     host: Type.String(),
     port: Type.Number(),
-    public: Type.String()
+    public: Type.String(),
+    financialData: Type.Object({
+      url: Type.String(),
+      apiKey: Type.String(),
+    }),
   })
 ])
 

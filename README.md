@@ -7,6 +7,13 @@
 Escreva projetos escalaveis em semanas. Cobrindo aspectos
 importantes, de negócio, arquitetura e qualidade.
 
+### Iniciativa
+
+Caso você queira se aprofundar mais um pouco na linguagem Typescript,
+aqui neste livro de bolso [Typescript Livro de Bolso](https://github.com/ktfth/typescript-livro-de-bolso)
+eu demonstro algumas práticas que podem ajudar a desenvolver
+programas de forma simplificada e objetiva.
+
 ## Motivação
 
 Quanto maior for o seu projeto, maior a necessidade de se
